@@ -22,10 +22,20 @@ jobs:
       - name: List dist directory
         run: ls -la dist
 
-      - name: Push to output branch
-        uses: crazy-max/ghaction-github-pages@v3
-        with:
-          target_branch: output
-          build_dir: dist
+      - name: Push dist to output branch manually
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config --global user.name 'github-actions'
+          git config --global user.email 'actions@github.com'
+          git fetch origin
+          # Cria branch 'output' ou troca para ele, limpando tudo
+          git checkout --orphan output
+          git reset --hard
+          # Copia os arquivos da pasta dist para raiz do repositório
+          git rm -rf .
+          cp -r dist/* .
+          # Adiciona, commita e força o push para o branch output
+          git add .
+          git commit -m "Update snake SVG"
+          git push -f origin output
