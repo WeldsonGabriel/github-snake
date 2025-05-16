@@ -1,7 +1,9 @@
 name: Generate Snake
 
 on:
-  workflow_dispatch:
+  schedule:
+    - cron: "0 0 * * *" # roda todo dia à meia-noite
+  workflow_dispatch:     # permite rodar manualmente
 
 jobs:
   generate:
@@ -19,23 +21,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: List dist directory
-        run: ls -la dist
-
-      - name: Push dist to output branch manually
+      - name: Deploy to GitHub Pages
+        uses: crazy-max/ghaction-github-pages@v4
+        with:
+          target_branch: output
+          build_dir: dist
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          git config --global user.name 'github-actions'
-          git config --global user.email 'actions@github.com'
-          git fetch origin
-          # Cria branch 'output' ou troca para ele, limpando tudo
-          git checkout --orphan output
-          git reset --hard
-          # Copia os arquivos da pasta dist para raiz do repositório
-          git rm -rf .
-          cp -r dist/* .
-          # Adiciona, commita e força o push para o branch output
-          git add .
-          git commit -m "Update snake SVG"
-          git push -f origin output
