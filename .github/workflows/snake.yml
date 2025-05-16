@@ -1,11 +1,9 @@
-# .github/workflows/snake.yml
-
 name: Generate Snake
 
 on:
   schedule:
-    - cron: "0 0 * * *" # todos os dias à meia-noite
-  workflow_dispatch:
+    - cron: "0 0 * * *"  # Executa todo dia à meia-noite
+  workflow_dispatch:      # Permite rodar manualmente
 
 jobs:
   generate:
@@ -14,7 +12,7 @@ jobs:
     steps:
       - uses: Platane/snk@master
         with:
-          github_user_name: https://github.com/WeldsonGabriel
+          github_user_name: WeldsonGabriel
           outputs: |
             dist/github-contribution-grid-snake.svg
 
